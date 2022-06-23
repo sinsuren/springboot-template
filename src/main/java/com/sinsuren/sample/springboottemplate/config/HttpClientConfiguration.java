@@ -23,11 +23,22 @@ public class HttpClientConfiguration {
     private HttpClientConfig config;
 
     @Bean
-    public RestTemplate restTemplate(final RestTemplateBuilder builder) {
-        List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
-        interceptors.add(new RestTemplateHeaderModifierInterceptor());
+    public RestTemplate restTemplate() {
+        RestTemplateBuilder builder = new RestTemplateBuilder();
+
+//        builder.interceptors(new RestTemplateHeaderModifierInterceptor());
         RestTemplate restTemplate = builder.requestFactory(() -> createRequestFactory(config)).build();
-        restTemplate.setInterceptors(interceptors);
+
+        List<ClientHttpRequestInterceptor> interceptorList = restTemplate.getInterceptors();
+
+        if (interceptorList == null) {
+            interceptorList = new ArrayList<>();
+        }
+
+        interceptorList.add(new RestTemplateHeaderModifierInterceptor());
+
+        restTemplate.setInterceptors(interceptorList);
+
         return restTemplate;
     }
 

@@ -19,16 +19,16 @@ class TestControllerTest {
 
         ExecutorService executorService = Executors.newFixedThreadPool(10);
         final AtomicLong counter = new AtomicLong(1);
-        for (int i = 0; i < 1000000; i++) {
+        for (int i = 0; i < 5000000; i++) {
             final Long requestCounter = counter.getAndIncrement();
             executorService.submit(() -> makeNetworkCall(requestCounter));
             if (i % 10000 == 0) {
-                TimeUnit.SECONDS.sleep(1);
+                TimeUnit.SECONDS.sleep(2);
             }
         }
 
         executorService.shutdown();
-        executorService.awaitTermination(5, TimeUnit.MINUTES);
+        executorService.awaitTermination(10, TimeUnit.MINUTES);
     }
 
 
